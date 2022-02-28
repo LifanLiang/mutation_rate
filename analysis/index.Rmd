@@ -1,5 +1,5 @@
 ---
-title: "Home"
+title: "Mutation type specific overdispersion"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
@@ -8,4 +8,59 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(RColorBrewer)
+```
+
+### MLE of overdispersion ($\alpha$)
+Integrate out $\theta_i$
+$$
+P(y_i | \mu_i, \alpha) = \int_0^{+\infty}  P(y_i|\mu_i,\theta_i)P(\theta_i|\alpha) \,d\theta_i
+=\dfrac{\mu_i^{y_i} \alpha^\alpha}{y_i!\Gamma(\alpha)}\int_0^{+\infty} \theta_i^{y_i+\alpha-1}e^{-(\mu_i+\alpha)\theta_i}\,d\theta_i
+$$
+The integral part is the same as the kernel of $\theta_i\sim Gamma(y_i+\alpha, \mu_i+\alpha)$. Thus we got
+$$
+P(y_i | \mu_i, \alpha)=\dfrac{\mu_i^{y_i} \alpha^\alpha}{y_i!\Gamma(\alpha)}\cdot \dfrac{\Gamma(y_i+\alpha)}{(\mu_i+\alpha)^{y_i+\alpha}}
+$$
+The loglikelihood would be:
+$$
+LL(y_i,\mu_i;\alpha) \propto log(\dfrac{\Gamma(y_i+\alpha)}{\Gamma(\alpha)})-y_ilog(\mu_i+\alpha)-\alpha log(1+\mu_i/\alpha)
+$$
+Considering the sparsity and the large sample size (3e10/window_size), we can further simplify the computation by isolating the scenario where $y_i=0$.
+When $y_i=0,\mu_i=0$, $LL$ can be ignored:
+$$
+LL(y_i,\mu_i;\alpha) = const
+$$
+When $y_i=0,\mu_i>0$:
+$$
+LL(y_i,\mu_i;\alpha) \propto -\alpha log(1+\mu_i/\alpha)
+$$
+
+
+### Validation of the estimator
+optim with "BFGS" method was used for MLE of overdispersion. I recomputed $\alpha$ for 5k window mutation rates. Estimated $\alpha$ is 2.709, close to the values in the proposal.
+
+### Estimating $\alpha$ for different mutation types
+* Results here are based on _100 bp_ window size
+```{r, echo=F}
+alpha.100 <- read.table("data/mute_type_100_alpha.txt", header=T)
+knitr::kable(alpha.100)
+```
+
+The plot of the gamma distribution. "C_to_A.CpG" and "C_to_G.CpG" are too close to seperate.
+```{r, echo=F}
+gamma.pdf <- data.frame(x=1:300/100)
+plot(NULL, xlim=c(0,2), ylim=c(0,6), ylab="pdf", xlab="theta")
+for (i in 1:nrow(alpha.100)) {
+  gamma.pdf[alpha.100[i,1]] <- dgamma(gamma.pdf$x, alpha.100[i,2], alpha.100[i,2])
+  lines(gamma.pdf$x, gamma.pdf[alpha.100[i,1]][[1]], col=i)
+}
+legend(1.25,6, legend = alpha.100[,1], col=1:9, lty=1)
+#ggplot(data=gamma.pdf, aes(x=x, y=alpha.100[4,1], group=1)) + geom_line()
+#plot(gamma.pdf$x, gamma.pdf$A_to_C, type="l")
+```
+
+
+
