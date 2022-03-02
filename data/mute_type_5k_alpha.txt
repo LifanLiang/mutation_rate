@@ -1,0 +1,10 @@
+mut_type	alpha
+A_to_C_and_5k.stat	0.52612002188782
+A_to_G_and_5k.stat	43.2717878919537
+A_to_T_and_5k.stat	1.28292020677786
+C_to_A_CpG_5k.stat	17.8477559454801
+C_to_A_nonCpG_5k.stat	27.7430593191678
+C_to_G_CpG_5k.stat	1.39677411028602
+C_to_G_nonCpG_5k.stat	1.02217970474945
+C_to_T_CpG_5k.stat	1.67258994270804
+C_to_T_nonCpG_5k.stat	44.400050848729
