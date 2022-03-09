@@ -14,6 +14,16 @@ library(ggplot2)
 library(RColorBrewer)
 ```
 
+### Problem overview
+For the $i$th window with a certain size in the genome, we assume the observed mutation rates ($y_i$) and expected mutation rates ($mu_i$) were generated with the probababilistic model below:
+$$
+y_i \sim Poisson(\mu_i\theta_i)
+$$
+$$
+\theta_i \sim Gamma(\alpha,\alpha) 
+$$
+
+
 ### MLE of overdispersion ($\alpha$)
 Integrate out $\theta_i$
 $$
@@ -26,21 +36,27 @@ P(y_i | \mu_i, \alpha)=\dfrac{\mu_i^{y_i} \alpha^\alpha}{y_i!\Gamma(\alpha)}\cdo
 $$
 The loglikelihood would be:
 $$
-LL(y_i,\mu_i;\alpha) \propto log(\dfrac{\Gamma(y_i+\alpha)}{\Gamma(\alpha)})-y_ilog(\mu_i+\alpha)-\alpha log(1+\mu_i/\alpha)
+\ell(\alpha;y_i,\mu_i) \propto log(\dfrac{\Gamma(y_i+\alpha)}{\Gamma(\alpha)})-y_ilog(\mu_i+\alpha)-\alpha log(1+\mu_i/\alpha)
 $$
 Considering the sparsity and the large sample size (3e10/window_size), we can further simplify the computation by isolating the scenario where $y_i=0$.
 When $y_i=0,\mu_i=0$, $LL$ can be ignored:
 $$
-LL(y_i,\mu_i;\alpha) = const
+\ell(\alpha;y_i,\mu_i) = const
 $$
 When $y_i=0,\mu_i>0$:
 $$
-LL(y_i,\mu_i;\alpha) \propto -\alpha log(1+\mu_i/\alpha)
+\ell(\alpha;y_i,\mu_i) \propto -\alpha log(1+\mu_i/\alpha)
 $$
-
 
 ### Validation of the estimator
 optim with "BFGS" method was used for MLE of overdispersion. I recomputed $\alpha$ for 5k window mutation rates. Estimated $\alpha$ is 2.709, close to the values in the proposal.
+
+### Asymptotic normality of MLE
+The second derivative of $\ell(\alpha;y_i,\mu_i)$ is
+$$
+\frac{d^2}{d\alpha^2}\ell(\alpha;y_i,\mu_i)=\sum_{k=1}^{y_i}\frac{-1}{(\alpha+k)^2}+\frac{y_i}{(\mu_i+\alpha)^2}+\frac{1}{\alpha}-\frac{\mu_i}{(\alpha+\mu_i)^2}-\frac{1}{\alpha+\mu_i}
+$$
+We used $\frac{d^2}{d\alpha^2}\ell(\alpha;y_i,\mu_i)$ to estimate the standard deviation of $\alpha$.
 
 ### Estimating $\alpha$ for different mutation types
 * Results here are based on _100 bp_ window size
@@ -60,14 +76,14 @@ for (i in 1:nrow(alpha.100)) {
 legend(1.25,6, legend = alpha.100[,1], col=1:9, lty=1)
 ```
 
-### Aggregate 100 bp to estimate $\alpha$ for 5K basepairs
+### Aggregate 100 bp to estimate $\alpha$ for 5K bps
 ```{r, echo=F}
 alpha.5k <- read.table("data/mute_type_5k_alpha.txt", header=T)
 ind.A <- startsWith(alpha.5k$mut_type, "A")
 ind.C <- !ind.A
 alpha.5k$mut_type[ind.A] <- substr(alpha.5k$mut_type[ind.A], 1, unlist(gregexec("_and",alpha.5k$mut_type[ind.A]))-1)
 alpha.5k$mut_type[ind.C] <- substr(alpha.5k$mut_type[ind.C], 1, unlist(gregexec("_5k",alpha.5k$mut_type[ind.C]))-1)
-knitr::kable(alpha.5k)
+knitr::kable(alpha.5k, digits=2)
 ```
 
 ```{r, echo=F}
@@ -79,4 +95,18 @@ for (i in 1:nrow(alpha.5k)) {
 }
 legend(1.7, 4, legend = alpha.5k[,1], col=1:9, lty=1)
 ```
+
+### Observed rates vs. expected rates
+The correlation between expected rates and observed rates is probably weak. This is consistent across mutation types (the figure on the top) and the total rate counts (the bottom figure).
+![](assets/exp_vs_obs_mut_type.png)
+![](assets/exp_vs_obs_total.png)
+
+### Hotspots across mutation types
+$\ell(\alpha;y_i,\mu_i)$ is actually the normalization factor for $P(\theta|y_i,\mu_i,\alpha)$, the posterior $theta$ is $Gamma(y_i+\alpha, \mu_i+\alpha)$. Hence we have
+$$
+E(\theta|y_i,\mu_i,\alpha)=\frac{y_i+\alpha}{\mu_i+\alpha}
+$$
+We computed the posterior mean of $\theta_i$ for all the mutation types. Below is the scatter plot of $\theta_i$ across different mutation types.
+![](assets/theta_post_mut_type.png)
+
 
