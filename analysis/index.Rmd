@@ -97,9 +97,24 @@ legend(1.7, 4, legend = alpha.5k[,1], col=1:9, lty=1)
 ```
 
 ### Observed rates vs. expected rates
+#### Correlation at 5kb level
 The correlation between expected rates and observed rates is probably weak. This is consistent across mutation types (the figure on the top) and the total rate counts (the bottom figure).
 ![](assets/exp_vs_obs_mut_type.png)
 ![](assets/exp_vs_obs_total.png)
+
+#### Correlation at chromosome level
+There is strong correlation when the mutation counts are summed up to the chromosome level.
+![](assets/exp_vs_obs_chr_level.png)
+
+#### Total counts for each mutation type
+The total counts are also quite close between observed and expected.
+```{r, echo=F}
+table <- read.csv2("data/mut_count_total.csv", sep=",")
+names(table) <- c("mutation type", "observed counts", "expected counts")
+knitr::kable(table, digits = 1)
+```
+![](assets/mut_type_total.png)
+
 
 ### Hotspots across mutation types
 $\ell(\alpha;y_i,\mu_i)$ is actually the normalization factor for $P(\theta|y_i,\mu_i,\alpha)$, the posterior $theta$ is $Gamma(y_i+\alpha, \mu_i+\alpha)$. Hence we have
