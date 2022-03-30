@@ -114,8 +114,62 @@ names(table) <- c("mutation type", "observed counts", "expected counts")
 knitr::kable(table, digits = 1)
 ```
 ![](assets/mut_type_total.png)
+### Hotspots continuity
+First, hotspots in this section are defined as windows with observed counts 0.5 larger than the expected counts.
+
+I computed how many hotspot windows are actually adjacent to another ("continuous" column in the count table). C_to_T and A_to_G have the most hotspots.
+```{r, echo=F}
+table <- read.csv("data/hotspot_stats.csv",sep=",", header=1, row.names=1)
+knitr::kable(table)
+```
+
+Then, we looked into the distance from each hotspot to its closest hotspot window. Hotspots in C_to_T and A_to_G have smaller distances. This result is consistent with the count table above
+![](assets/hotspot_dist.png). 
+
+### Hotspot overlap across mutation types (one 5k window away)
+Here, we define the overlap as two hotspot windows are one window away. Jaccard coefficient was computed.
+$$
+Jaccard(A,B) = \dfrac{|A\cap B|}{|A\cup B|}
+$$
+
+```{r, echo=F}
+library(rtracklayer)
+library(ggplot2)
+beds <- list.files("../controls_5k", full.names = T, pattern="hotspot")
+bed.ranges <- list()
+for (i in 1:length(beds)) {
+  temp <- vroom::vroom(beds[i], col_names =T, show_col_types = F)
+  bed.ranges[[i]] <- makeGRangesFromDataFrame(temp, keep.extra.columns = T, 
+                                   start.field = "loc", end.field = "loc")
+  start(bed.ranges[[i]]) <- start(bed.ranges[[i]]) - 1
+  end(bed.ranges[[i]]) <- end(bed.ranges[[i]]) + 1
+}
+
+names <- sapply(strsplit(list.files("../controls_5k", pattern="hotspot"),"\\."), function(x) {x[1]})
+names <- substr(names, 1, nchar(names)-11)
+overlap <- expand.grid(x=names, y=names)
+overlap$Jaccard <- 0
+for (i in 1:length(beds)) {
+  overlap$Jaccard[((i-1)*9+1):(i*9)] <- sapply(bed.ranges, function(x) {length(intersect(x, bed.ranges[[i]]))/length(union(x, bed.ranges[[i]]))})
+  overlap$Jaccard[(i-1)*9+i] <- 0
+  
+}
+ggplot(overlap, aes(x, y, fill= Jaccard)) + geom_tile() + theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
+```
+
+As shown in the heatmap, A_to_G, C_to_T_CpG, and C_to_T_nonCpG share more hotspots. Hotspots in C_to_G_CpG and C_to_A_CpG are not similar to other mutation types.
+
+```{r, echo=F}
+library(ChIPpeakAnno)
+
+res <- makeVennDiagram(Peaks=bed.ranges[c(2,8,9)], NameOfPeaks=names[c(2,8,9)], fill=c("red","blue","yellow"))
+```
 
 
+
+
+)
 ### Hotspots across mutation types
 $\ell(\alpha;y_i,\mu_i)$ is actually the normalization factor for $P(\theta|y_i,\mu_i,\alpha)$, the posterior $theta$ is $Gamma(y_i+\alpha, \mu_i+\alpha)$. Hence we have
 $$
