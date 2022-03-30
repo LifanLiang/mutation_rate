@@ -382,16 +382,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong8ed415f"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 8ed415f </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong10d85d8"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 10d85d8 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong8ed415f" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrong10d85d8" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 8ed415f. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version 10d85d8. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -411,6 +411,7 @@ Untracked files:
     Untracked:  VennDiagram.2022-03-30_13-29-36.log
     Untracked:  VennDiagram.2022-03-30_13-30-41.log
     Untracked:  VennDiagram.2022-03-30_13-33-19.log
+    Untracked:  VennDiagram.2022-03-30_13-34-05.log
 
 </code></pre>
 <p>
@@ -449,6 +450,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+10d85d8
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-03-30
+</td>
+<td>
+wflow_publish("analysis")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+fbef0e1
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-03-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -994,7 +1029,12 @@ Lifan Liang
 </tr>
 </tbody>
 </table>
-<p><img src="assets/mut_type_total.png" /> ### Hotspots continuity First, hotspots in this section are defined as windows with observed counts 0.5 larger than the expected counts.</p>
+<p><img src="assets/mut_type_total.png" /></p>
+</div>
+</div>
+<div id="hotspots-continuity" class="section level3">
+<h3>Hotspots continuity</h3>
+<p>First, hotspots in this section are defined as windows with observed counts 0.5 larger than the expected counts.</p>
 <p>I computed how many hotspot windows are actually adjacent to another (“continuous” column in the count table). C_to_T and A_to_G have the most hotspots.</p>
 <table>
 <thead>
@@ -1063,7 +1103,6 @@ Lifan Liang
 </tbody>
 </table>
 <p>Then, we looked into the distance from each hotspot to its closest hotspot window. Hotspots in C_to_T and A_to_G have smaller distances. This result is consistent with the count table above <img src="assets/hotspot_dist.png" />.</p>
-</div>
 </div>
 <div id="hotspot-overlap-across-mutation-types-one-5k-window-away" class="section level3">
 <h3>Hotspot overlap across mutation types (one 5k window away)</h3>
