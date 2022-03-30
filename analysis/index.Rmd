@@ -132,7 +132,7 @@ $$
 Jaccard(A,B) = \dfrac{|A\cap B|}{|A\cup B|}
 $$
 
-```{r, echo=F}
+```{r, echo=F, message=F}
 library(rtracklayer)
 library(ggplot2)
 beds <- list.files("../controls_5k", full.names = T, pattern="hotspot")
@@ -160,7 +160,7 @@ ggplot(overlap, aes(x, y, fill= Jaccard)) + geom_tile() + theme(axis.text.x=elem
 
 As shown in the heatmap, A_to_G, C_to_T_CpG, and C_to_T_nonCpG share more hotspots. Hotspots in C_to_G_CpG and C_to_A_CpG are not similar to other mutation types.
 
-```{r, echo=F}
+```{r, echo=F, message=F}
 library(ChIPpeakAnno)
 
 res <- makeVennDiagram(Peaks=bed.ranges[c(2,8,9)], NameOfPeaks=names[c(2,8,9)], fill=c("red","blue","yellow"))
