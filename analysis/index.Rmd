@@ -114,6 +114,8 @@ names(table) <- c("mutation type", "observed counts", "expected counts")
 knitr::kable(table, digits = 1)
 ```
 ![](assets/mut_type_total.png)
+
+
 ### Hotspots continuity
 First, hotspots in this section are defined as windows with observed counts 0.5 larger than the expected counts.
 
