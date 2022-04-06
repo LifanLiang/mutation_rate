@@ -291,7 +291,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-03-30
+<strong>Last updated:</strong> 2022-04-06
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -382,16 +382,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong10d85d8"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 10d85d8 </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongb8f014a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> b8f014a </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong10d85d8" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongb8f014a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 10d85d8. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version b8f014a. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -401,17 +401,6 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .RData
     Ignored:    .Rhistory
-
-Untracked files:
-    Untracked:  VennDiagram.2022-03-30_12-44-20.log
-    Untracked:  VennDiagram.2022-03-30_12-45-15.log
-    Untracked:  VennDiagram.2022-03-30_12-46-54.log
-    Untracked:  VennDiagram.2022-03-30_12-47-22.log
-    Untracked:  VennDiagram.2022-03-30_12-51-46.log
-    Untracked:  VennDiagram.2022-03-30_13-29-36.log
-    Untracked:  VennDiagram.2022-03-30_13-30-41.log
-    Untracked:  VennDiagram.2022-03-30_13-33-19.log
-    Untracked:  VennDiagram.2022-03-30_13-34-05.log
 
 </code></pre>
 <p>
@@ -450,6 +439,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+b8f014a
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-04-06
+</td>
+<td>
+wflow_publish(c("analysis", "data", "docs"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+a50ea9a
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-03-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1032,9 +1055,18 @@ Lifan Liang
 <p><img src="assets/mut_type_total.png" /></p>
 </div>
 </div>
+<div id="definition-of-hotspots" class="section level3">
+<h3>Definition of hotspots</h3>
+<p><span class="math inline">\(\ell(\alpha;y_i,\mu_i)\)</span> is actually the normalization factor for <span class="math inline">\(P(\theta|y_i,\mu_i,\alpha)\)</span>, the posterior <span class="math inline">\(theta\)</span> is <span class="math inline">\(Gamma(y_i+\alpha, \mu_i+\alpha)\)</span>. Hence we have <span class="math display">\[
+E(\theta|y_i,\mu_i,\alpha)=\frac{y_i+\alpha}{\mu_i+\alpha}
+\]</span></p>
+<p>Previously, I tried to define hotspots based on <span class="math inline">\(E(\theta|y_i,\mu_i,\alpha)\)</span>. As shown in the figure below, large <span class="math inline">\(\alpha\)</span> in some mutation types may make it difficult to find hotspots. <img src="assets/theta_post_mut_type.png" /></p>
+<p>Alternatively, we detect hotspots with a simple test. Say the null model is that: <span class="math display">\[
+y_i \sim Poisson(\mu_i)
+\]</span> And the alternative is that <span class="math inline">\(y_i\)</span> is not sampled from the Poisson of <span class="math inline">\(\mu_i\)</span>. We used <span class="math inline">\(P&lt;0.05\)</span> as the criteria.</p>
+</div>
 <div id="hotspots-continuity" class="section level3">
 <h3>Hotspots continuity</h3>
-<p>First, hotspots in this section are defined as windows with observed counts 0.5 larger than the expected counts.</p>
 <p>I computed how many hotspot windows are actually adjacent to another (“continuous” column in the count table). C_to_T and A_to_G have the most hotspots.</p>
 <table>
 <thead>
@@ -1049,13 +1081,13 @@ Lifan Liang
 <tr class="odd">
 <td align="left">A_to_C_and_5k</td>
 <td align="right">576194</td>
-<td align="right">7720</td>
+<td align="right">7667</td>
 <td align="right">107</td>
 </tr>
 <tr class="even">
 <td align="left">C_to_T_nonCpG_5k</td>
 <td align="right">576194</td>
-<td align="right">26884</td>
+<td align="right">11393</td>
 <td align="right">1464</td>
 </tr>
 <tr class="odd">
@@ -1073,7 +1105,7 @@ Lifan Liang
 <tr class="odd">
 <td align="left">A_to_T_and_5k</td>
 <td align="right">576194</td>
-<td align="right">7324</td>
+<td align="right">7300</td>
 <td align="right">115</td>
 </tr>
 <tr class="even">
@@ -1085,7 +1117,7 @@ Lifan Liang
 <tr class="odd">
 <td align="left">A_to_G_and_5k</td>
 <td align="right">576194</td>
-<td align="right">29033</td>
+<td align="right">5147</td>
 <td align="right">1683</td>
 </tr>
 <tr class="even">
@@ -1097,7 +1129,7 @@ Lifan Liang
 <tr class="odd">
 <td align="left">C_to_T_CpG_5k</td>
 <td align="right">576194</td>
-<td align="right">19633</td>
+<td align="right">15183</td>
 <td align="right">836</td>
 </tr>
 </tbody>
@@ -1186,9 +1218,6 @@ Lifan Liang
 </table>
 </div>
 </div>
-<p>) ### Hotspots across mutation types <span class="math inline">\(\ell(\alpha;y_i,\mu_i)\)</span> is actually the normalization factor for <span class="math inline">\(P(\theta|y_i,\mu_i,\alpha)\)</span>, the posterior <span class="math inline">\(theta\)</span> is <span class="math inline">\(Gamma(y_i+\alpha, \mu_i+\alpha)\)</span>. Hence we have <span class="math display">\[
-E(\theta|y_i,\mu_i,\alpha)=\frac{y_i+\alpha}{\mu_i+\alpha}
-\]</span> We computed the posterior mean of <span class="math inline">\(\theta_i\)</span> for all the mutation types. Below is the scatter plot of <span class="math inline">\(\theta_i\)</span> across different mutation types. <img src="assets/theta_post_mut_type.png" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
