@@ -116,9 +116,22 @@ knitr::kable(table, digits = 1)
 ![](assets/mut_type_total.png)
 
 
-### Hotspots continuity
-First, hotspots in this section are defined as windows with observed counts 0.5 larger than the expected counts.
+### Definition of hotspots
+$\ell(\alpha;y_i,\mu_i)$ is actually the normalization factor for $P(\theta|y_i,\mu_i,\alpha)$, the posterior $theta$ is $Gamma(y_i+\alpha, \mu_i+\alpha)$. Hence we have
+$$
+E(\theta|y_i,\mu_i,\alpha)=\frac{y_i+\alpha}{\mu_i+\alpha}
+$$
 
+Previously, I tried to define hotspots based on $E(\theta|y_i,\mu_i,\alpha)$. As shown in the figure below, large $\alpha$ in some mutation types may make it difficult to find hotspots.
+![](assets/theta_post_mut_type.png)
+
+Alternatively, we detect hotspots with a simple test. Say the null model is that:
+$$
+y_i \sim Poisson(\mu_i)
+$$
+And the alternative is that $y_i$ is not sampled from the Poisson of $\mu_i$. We used $P<0.05$ as the criteria.
+
+### Hotspots continuity
 I computed how many hotspot windows are actually adjacent to another ("continuous" column in the count table). C_to_T and A_to_G have the most hotspots.
 ```{r, echo=F}
 table <- read.csv("data/hotspot_stats.csv",sep=",", header=1, row.names=1)
@@ -171,13 +184,9 @@ res <- makeVennDiagram(Peaks=bed.ranges[c(2,8,9)], NameOfPeaks=names[c(2,8,9)], 
 
 
 
-)
-### Hotspots across mutation types
-$\ell(\alpha;y_i,\mu_i)$ is actually the normalization factor for $P(\theta|y_i,\mu_i,\alpha)$, the posterior $theta$ is $Gamma(y_i+\alpha, \mu_i+\alpha)$. Hence we have
-$$
-E(\theta|y_i,\mu_i,\alpha)=\frac{y_i+\alpha}{\mu_i+\alpha}
-$$
-We computed the posterior mean of $\theta_i$ for all the mutation types. Below is the scatter plot of $\theta_i$ across different mutation types.
-![](assets/theta_post_mut_type.png)
+
+
+
+
 
 
