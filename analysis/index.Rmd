@@ -199,7 +199,14 @@ $$
 Y_{it} \sim Pois(\mu_i \cdot \theta_{it})
 $$
 
-Numpyro MCMC was used to infer the posterior of $\beta_{jt}$
+Numpyro MCMC was used to infer the posterior of $\beta_{jt}$. 
+
+I initialized four chains. For each chain, 2000 samples were drawn after warmup of 1000 samples. Chains seems mixed
+
+![](assets/numpyro_mixing.png)
+
+
+
 ![](assets/beta_jt_numpyro.png). 
 
 
