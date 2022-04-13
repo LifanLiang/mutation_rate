@@ -200,39 +200,9 @@ Y_{it} \sim Pois(\mu_i \cdot \theta_{it})
 $$
 
 Numpyro MCMC was used to infer the posterior of $\beta_{jt}$
+![](assets/beta_jt_numpyro.png). 
 
 
-```{r echo=F}
-params <- read.table("data/param_est.tsv", header=T)
-muttype <- unique(params$muttype)
-
-library(ggplot2)
-library(gridExtra)
-library(patchwork)
-plot_beta = function(dat, title, xlab="beta", ylab="Feature") {
-    p1 <- ggplot(dat, aes(y=features)) + 
-    geom_point(aes(x=mean), colour="#800000") + #plot OR
-    geom_segment(aes(x=lower,xend=upper,yend=features), alpha=0.8) +
-    geom_vline(xintercept=0) + theme_bw() + labs(title=title, x=xlab, y=ylab)
-}
-
-remove_y <- theme(
-  axis.text.y = element_blank(),
-  axis.ticks.y = element_blank(),
-  axis.title.y = element_blank()
-)
-
-p <- list()
-for (i in 1:length(muttype)) {
-  if(i %% 3 != 1) { 
-  p[[i]] <- plot_beta(params[params$muttype==muttype[i],][1:14,], muttype[i]) + remove_y
-  } else {
-  p[[i]] <- plot_beta(params[params$muttype==muttype[i],][1:14,], muttype[i])
-  }
-}
-
-wrap_plots(p, nrow = 3) + plot_layout(guides = "collect", heights=c(4,4,4), widths=c(3,3,3))
-```
 
 
 
