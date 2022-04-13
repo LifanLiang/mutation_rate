@@ -205,7 +205,6 @@ Numpyro MCMC was used to infer the posterior of $\beta_{jt}$
 ```{r echo=F}
 params <- read.table("data/param_est.tsv", header=T)
 muttype <- unique(params$muttype)
-params[params$muttype==muttype[1],][1:14,]
 
 library(ggplot2)
 library(gridExtra)
