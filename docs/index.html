@@ -291,7 +291,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-04-06
+<strong>Last updated:</strong> 2022-04-13
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -382,16 +382,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongb8f014a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> b8f014a </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong82722f8"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 82722f8 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongb8f014a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrong82722f8" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version b8f014a. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version 82722f8. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -401,6 +401,11 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .RData
     Ignored:    .Rhistory
+
+Untracked files:
+    Untracked:  VennDiagram.2022-04-06_15-03-36.log
+    Untracked:  VennDiagram.2022-04-13_12-47-23.log
+    Untracked:  data/param_est.tsv
 
 </code></pre>
 <p>
@@ -439,6 +444,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+82722f8
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-04-13
+</td>
+<td>
+wflow_publish("analysis")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+3978540
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-04-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1166,6 +1205,17 @@ Date
 <tbody>
 <tr>
 <td>
+3978540
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+<tr>
+<td>
 964ae17
 </td>
 <td>
@@ -1205,6 +1255,17 @@ Date
 <tbody>
 <tr>
 <td>
+3978540
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+<tr>
+<td>
 964ae17
 </td>
 <td>
@@ -1218,6 +1279,42 @@ Lifan Liang
 </table>
 </div>
 </div>
+</div>
+<div id="bayesian-poisson-regression" class="section level2">
+<h2>Bayesian Poisson regression</h2>
+<p>Given observed mutation rates (<span class="math inline">\(y_i\)</span>), baseline mutation rates (<span class="math inline">\(\mu_i\)</span>) and 14 genomic features (<span class="math inline">\(X_i\)</span>). The generative process is</p>
+<p><span class="math display">\[
+\tau^2_j \sim Inv-\chi^2(1,1)
+\]</span> <span class="math display">\[
+\beta_{jt} \sim N(0,\tau^2_j)
+\]</span> <span class="math display">\[
+\theta_{it} = exp(\beta_{0t}+\sum_j \beta_{jt}X_{ij})
+\]</span></p>
+<p><span class="math display">\[
+Y_{it} \sim Pois(\mu_i \cdot \theta_{it})
+\]</span></p>
+<p>Numpyro MCMC was used to infer the posterior of <span class="math inline">\(\beta_{jt}\)</span></p>
+<pre><code>         muttype  features         mean      upper       lower
+1  C_to_A.nonCpG       DHS  0.237672420 0.44036239  0.03892791
+2  C_to_A.nonCpG CpGisland -0.309389700 0.26359211 -0.97109759
+3  C_to_A.nonCpG     Lamin  0.451087950 0.64813873  0.25680960
+4  C_to_A.nonCpG        GC -0.146572890 0.04864126 -0.34931158
+5  C_to_A.nonCpG        RT -0.004722108 0.30409704 -0.32219428
+6  C_to_A.nonCpG        RR  0.048130717 0.22483436 -0.12588625
+7  C_to_A.nonCpG      Exon  0.070799580 0.24631744 -0.12752701
+8  C_to_A.nonCpG   H3K27ac -0.071669720 0.15536558 -0.32917833
+9  C_to_A.nonCpG  H3K27me3  0.143322600 0.33660993 -0.04417534
+10 C_to_A.nonCpG  H3K36me3  0.038558940 0.27679833 -0.19389093
+11 C_to_A.nonCpG   H3K4me1 -0.032983862 0.20699571 -0.28166594
+12 C_to_A.nonCpG   H3K4me3  0.202427830 0.42411087 -0.02024281
+13 C_to_A.nonCpG    H3K9ac -0.021536466 0.19404428 -0.23506365
+14 C_to_A.nonCpG   H3K9me3  0.331941840 0.53343548  0.12845713</code></pre>
+<pre><code>
+Attaching package: &#39;gridExtra&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:BiocGenerics&#39;:
+
+    combine</code></pre>
+<p><img src="figure/index.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1242,10 +1339,10 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] ChIPpeakAnno_3.28.1  rtracklayer_1.54.0   GenomicRanges_1.46.1
- [4] GenomeInfoDb_1.30.1  IRanges_2.28.0       S4Vectors_0.32.3    
- [7] BiocGenerics_0.40.0  RColorBrewer_1.1-2   ggplot2_3.3.5       
-[10] workflowr_1.7.0     
+ [1] patchwork_1.1.1      gridExtra_2.3        ChIPpeakAnno_3.28.1 
+ [4] rtracklayer_1.54.0   GenomicRanges_1.46.1 GenomeInfoDb_1.30.1 
+ [7] IRanges_2.28.0       S4Vectors_0.32.3     BiocGenerics_0.40.0 
+[10] RColorBrewer_1.1-2   ggplot2_3.3.5        workflowr_1.7.0     
 
 loaded via a namespace (and not attached):
   [1] colorspace_2.0-2            rjson_0.2.21               
