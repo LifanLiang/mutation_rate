@@ -201,7 +201,7 @@ $$
 
 Numpyro MCMC was used to infer the posterior of $\beta_{jt}$. 
 
-I initialized four chains. For each chain, 2000 samples were drawn after warmup of 1000 samples. Chains seems mixed
+I initialized four chains. For each chain, 2000 samples were drawn after warmup of 1000 samples. Chains seem mixed.
 
 ![](assets/numpyro_mixing.png)
 
