@@ -147,7 +147,7 @@ $$
 Jaccard(A,B) = \dfrac{|A\cap B|}{|A\cup B|}
 $$
 
-```{r, echo=F, message=F}
+```{r, echo=F, message=F, warning=F}
 library(rtracklayer)
 library(ggplot2)
 beds <- list.files("../controls_5k", full.names = T, pattern="hotspot")
@@ -167,7 +167,6 @@ overlap$Jaccard <- 0
 for (i in 1:length(beds)) {
   overlap$Jaccard[((i-1)*9+1):(i*9)] <- sapply(bed.ranges, function(x) {length(intersect(x, bed.ranges[[i]]))/length(union(x, bed.ranges[[i]]))})
   overlap$Jaccard[(i-1)*9+i] <- 0
-  
 }
 ggplot(overlap, aes(x, y, fill= Jaccard)) + geom_tile() + theme(axis.text.x=element_text(angle = 45, hjust = 1))
 
