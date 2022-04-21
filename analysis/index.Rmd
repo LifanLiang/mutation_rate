@@ -15,7 +15,7 @@ library(RColorBrewer)
 ```
 
 ### Problem overview
-For the $i$th window with a certain size in the genome, we assume the observed mutation rates ($y_i$) and expected mutation rates ($mu_i$) were generated with the probababilistic model below:
+For the $i$th window with a certain size in the genome, we assume the observed mutation rates ($y_i$) and expected mutation rates ($mu_i$) were generated with the probabilistic model below:
 $$
 y_i \sim Poisson(\mu_i\theta_i)
 $$
