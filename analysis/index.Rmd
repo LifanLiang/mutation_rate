@@ -208,8 +208,39 @@ I initialized four chains. For each chain, 2000 samples were drawn after warmup 
 
 ![](assets/beta_jt_numpyro.png). 
 
+### Stan implementation
+The same model was implemented with rstan. The NUTS sampler was used. I initiated 4 chains
+
+#### Diagnostics
+First, the four chains were well mixed, as shown below.
+
+![](assets/stan_trace.png)
+
+Next, the energy distribution was close to the marginal energy distribution. According to Stan user guide, this is a good sign that the sampler explored the target distribution efficiently.
+
+![](assets/stan_diag_energy.png)
+
+We further performed the posterior predictive check. Essentially, we draw a vector of $\beta$ from the posterior and draw $\tilde{y}$ from the Poisson distribution parameterized by $\beta$. Then we compared the distribution of $\tilde{y}$ and observed $y$.
+
+As shown in the figure below,  $\tilde{y}$ is close to $y$ across mutation types.
+![](assets/post_pred_checks.png)
+
+#### Parameter estimation
+![](assets/stan_beta_est.png)
+
+#### Cross validation with log pointwise posterior probability (lpd)
+The idea is to estimate parameters with one set of windows and estimate the fitness in another set of windows. According to Stan user guide, lpd can be computed as:
+
+$$
+lpd=\frac{1}{N}\sum_{n=1}^N{log\,p(y_n|y,M_1)}
+$$
+where $p(y_n|y,M_1)$ can be obtained by averaging over posterior predictive.
+$$
+p(y_n|y,M_1)=\int{P(y_n|\theta)P(\theta|y,M_1)}\,d\theta=E_{\theta|y}(l(\theta;y_n))
+$$
 
 
+Suppose we already obtained posterior samples of $\tau$ and $\beta$ from the odd windows. To estimate lpd in the even windows, 
 
 
 
