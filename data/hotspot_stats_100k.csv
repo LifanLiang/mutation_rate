@@ -1,0 +1,10 @@
+,total,hotspots,continuous
+A_to_T_and_100k,28822,872,46
+C_to_G_CpG_100k,28822,749,24
+C_to_G_nonCpG_100k,28822,687,32
+A_to_G_and_100k,28822,830,28
+C_to_A_CpG_100k,28822,874,41
+A_to_C_and_100k,28822,852,33
+C_to_T_CpG_100k,28822,729,25
+C_to_T_nonCpG_100k,28822,556,13
+C_to_A_nonCpG_100k,28822,490,22

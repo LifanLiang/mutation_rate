@@ -129,17 +129,26 @@ Alternatively, we detect hotspots with a simple test. Say the null model is that
 $$
 y_i \sim Poisson(\mu_i)
 $$
-And the alternative is that $y_i$ is not sampled from the Poisson of $\mu_i$. We used $P<0.05$ as the criteria.
+And the alternative is that $y_i$ is not sampled from the Poisson of $\mu_i$. We used $P<0.001$ as the criteria for 5k windows. The cutoff was 0.05 for 100k windows.
 
 ### Hotspots continuity
-I computed how many hotspot windows are actually adjacent to another ("continuous" column in the count table). C_to_T and A_to_G have the most hotspots.
+I computed how many hotspot windows are actually adjacent to another ("continuous" column in the count table). C_to_T and C_to_G have the most hotspots.
 ```{r, echo=F}
 table <- read.csv("data/hotspot_stats.csv",sep=",", header=1, row.names=1)
 knitr::kable(table)
 ```
 
+When mutation counts are aggregated to 100K base levels, somehow mutations with the most hotspots become "A_to..." mutation types.  
+```{r, echo=F}
+table <- read.csv("data/hotspot_stats_100k.csv",sep=",", header=1, row.names=1)
+knitr::kable(table)
+```
+
+
 Then, we looked into the distance from each hotspot to its closest hotspot window. Hotspots in C_to_T and A_to_G have smaller distances. This result is consistent with the count table above
 ![](assets/hotspot_dist.png). 
+
+![](assets/hotspot_dist_100k.png)
 
 ### Hotspot overlap across mutation types (one 5k window away)
 Here, we define the overlap as two hotspot windows are one window away. Jaccard coefficient was computed.
@@ -172,7 +181,32 @@ ggplot(overlap, aes(x, y, fill= Jaccard)) + geom_tile() + theme(axis.text.x=elem
 
 ```
 
-As shown in the heatmap, A_to_G, C_to_T_CpG, and C_to_T_nonCpG share more hotspots. Hotspots in C_to_G_CpG and C_to_A_CpG are not similar to other mutation types.
+
+```{r, echo=F, message=F, warning=F}
+library(rtracklayer)
+library(ggplot2)
+beds <- list.files("data/hotspot_100k", full.names = T, pattern="hotspot")
+bed.ranges <- list()
+for (i in 1:length(beds)) {
+  temp <- vroom::vroom(beds[i], col_names =T, show_col_types = F)
+  bed.ranges[[i]] <- makeGRangesFromDataFrame(temp, keep.extra.columns = T,
+                                   start.field = "loc", end.field = "loc")
+  start(bed.ranges[[i]]) <- start(bed.ranges[[i]]) - 1
+  end(bed.ranges[[i]]) <- end(bed.ranges[[i]]) + 1
+}
+
+names <- sapply(strsplit(list.files("data/hotspot_100k", pattern="hotspot"),"\\."), function(x) {x[1]})
+names <- substr(names, 1, nchar(names)-5)
+overlap <- expand.grid(x=names, y=names)
+overlap$Jaccard <- 0
+for (i in 1:length(beds)) {
+  overlap$Jaccard[((i-1)*9+1):(i*9)] <- sapply(bed.ranges, function(x) {length(intersect(x, bed.ranges[[i]]))/length(union(x, bed.ranges[[i]]))})
+  overlap$Jaccard[(i-1)*9+i] <- 0
+}
+ggplot(overlap, aes(x, y, fill= Jaccard)) + geom_tile() + theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
+```
+
 
 ```{r, echo=F, message=F}
 library(ChIPpeakAnno)
@@ -195,10 +229,10 @@ $$
 $$
 
 $$
-Y_{it} \sim Pois(\mu_i \cdot \theta_{it})
+Y_{it} \sim Pois(\mu_{it} \cdot \theta_{it})
 $$
 
-Numpyro MCMC was used to infer the posterior of $\beta_{jt}$. 
+### Numpyro MCMC was used to infer the posterior of $\beta_{jt}$. 
 
 I initialized four chains. For each chain, 2000 samples were drawn after warmup of 1000 samples. Chains seem mixed.
 
@@ -209,7 +243,7 @@ I initialized four chains. For each chain, 2000 samples were drawn after warmup 
 ![](assets/beta_jt_numpyro.png). 
 
 ### Stan implementation
-The same model was implemented with rstan. The NUTS sampler was used. I initiated 4 chains
+The same model was implemented with rstan. The NUTS sampler was used. I initiated 4 chains. Within each chain, 1000 samples were drawn after warm up of 1000.
 
 #### Diagnostics
 First, the four chains were well mixed, as shown below.
@@ -224,6 +258,32 @@ We further performed the posterior predictive check. Essentially, we draw a vect
 
 As shown in the figure below,  $\tilde{y}$ is close to $y$ across mutation types.
 ![](assets/post_pred_checks.png)
+
+#### Simulation
+In the simulation experiment, $\tau$ and $\beta$ are generated according to the generative process above. As for the genomic features ($X$), we tested with randomly generated features and the real data features.
+
+** Randomly genearted features
+All the features are sampled from the Normal distributions. Baseline mutation rates are sampled from uniform distribution within $[0,1]$. The diagnostics about the energy distribution and the divergent transition is shown in the figures below. The energy distribution is quite close to each other.
+
+![](assets/simulation/beta_simulation_energyplot.png)
+As for the pairs plot, note that the crossover between the same two parameters represent different half chains. If there are divergent transitions, dots will become red cross.
+![](assets/simulation/beta_simulation_pairplot.png)
+
+Shown in the figure below, the estimate is very close to the ground truth. The plum pillar is ground truth and the blue dots and blue lines are the estimates.
+
+![](assets/simulation/simulation_beta_stan.png)
+
+**Real genomic features**
+With real genomic features and real baseline, somehow the synthetic mutation count ($y$) is quite different to the real ones. We proceeded to perform inference and the sampler is having difficulty drawing representative samples. As shown in the figure below, $\pi|q$ is more centered than the marginal $\pi$.
+
+![](assets/simulation/beta_real_baseline_energy.png)
+
+For the pairs plots, there are a few red crosses indicating divergent transitions. And $\tau[1]$ in the first row of scatter plot has a wider range.
+
+![](assets/simulation/beta_real_baseline_pairplot.png)
+
+And we observed that most estimates of $beta$ have high uncertainty and far away from the ground truth.
+![](assets/simulation/simulation_beta_stan_real_baseline.png)
 
 #### Parameter estimation
 ![](assets/stan_beta_est.png)
