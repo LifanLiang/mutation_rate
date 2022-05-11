@@ -245,20 +245,6 @@ I initialized four chains. For each chain, 2000 samples were drawn after warmup 
 ### Stan implementation
 The same model was implemented with rstan. The NUTS sampler was used. I initiated 4 chains. Within each chain, 1000 samples were drawn after warm up of 1000.
 
-#### Diagnostics
-First, the four chains were well mixed, as shown below.
-
-![](assets/stan_trace.png)
-
-Next, the energy distribution was close to the marginal energy distribution. According to Stan user guide, this is a good sign that the sampler explored the target distribution efficiently.
-
-![](assets/stan_diag_energy.png)
-
-We further performed the posterior predictive check. Essentially, we draw a vector of $\beta$ from the posterior and draw $\tilde{y}$ from the Poisson distribution parameterized by $\beta$. Then we compared the distribution of $\tilde{y}$ and observed $y$.
-
-As shown in the figure below,  $\tilde{y}$ is close to $y$ across mutation types.
-![](assets/post_pred_checks.png)
-
 #### Simulation
 In the simulation experiment, $\tau$ and $\beta$ are generated according to the generative process above. As for the genomic features ($X$), we tested with randomly generated features and the real data features.
 
@@ -285,7 +271,23 @@ For the pairs plots, there are a few red crosses indicating divergent transition
 And we observed that most estimates of $beta$ have high uncertainty and far away from the ground truth.
 ![](assets/simulation/simulation_beta_stan_real_baseline.png)
 
-#### Parameter estimation
+
+#### Diagnostics for real dataset
+First, the four chains were well mixed, as shown below.
+
+![](assets/stan_trace.png)
+
+Next, the energy distribution was close to the marginal energy distribution. According to Stan user guide, this is a good sign that the sampler explored the target distribution efficiently.
+
+![](assets/stan_diag_energy.png)
+
+We further performed the posterior predictive check. Essentially, we draw a vector of $\beta$ from the posterior and draw $\tilde{y}$ from the Poisson distribution parameterized by $\beta$. Then we compared the distribution of $\tilde{y}$ and observed $y$.
+
+As shown in the figure below,  $\tilde{y}$ is close to $y$ across mutation types.
+![](assets/post_pred_checks.png)
+
+
+#### Parameter estimation for real dataset
 ![](assets/stan_beta_est.png)
 
 #### Cross validation with log pointwise posterior probability (lpd)
