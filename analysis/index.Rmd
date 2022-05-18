@@ -329,6 +329,30 @@ As shown in the figure below,  $\tilde{y}$ is close to $y$ across mutation types
 #### Parameter estimation for real dataset
 ![](assets/stan_beta_est.png)
 
+## Poisson regression with PyMC
+
+### Simulation
+Diagnostics is OK with the energy plot.
+![](assets/pymc_results/sim_energyplot.png)
+Estimation of $\beta$ is close to the ground truth. But $\tau$ is not.
+![](assets/pymc_results/simtau_est.png)
+
+![](assets/pymc_results/simbeta_est.png)
+
+### Real data
+Again, diagotiscs seem fine with the energy plot.
+![](assets/pymc_results/butchr9_energyplot.png)
+
+I also perform posterior checks to compare the distribution of metawindow mutation counts.
+
+![](assets/pymc_results/posterior_checks.png)
+
+Below is the estimate of $\tau$ and $\beta$.
+![](assets/pymc_results/realtau_est.png)
+
+![](assets/pymc_results/realbeta_est.png)
+So far I can only compute lpd for the training data (meta windows). **elpd is -32486.9. **
+
 #### Cross validation with log pointwise posterior probability (lpd)
 The idea is to estimate parameters with one set of windows and estimate the fitness in another set of windows. According to Stan user guide, lpd can be computed as:
 
